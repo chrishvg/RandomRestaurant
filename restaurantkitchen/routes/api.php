@@ -20,3 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('ingredients', IngredientController::class);
+
+Route::post('ingredients/take', [IngredientController::class, 'take']);
+Route::post('ingredients/enough', [IngredientController::class, 'enough']);

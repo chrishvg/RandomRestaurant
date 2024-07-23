@@ -52,4 +52,48 @@ class IngredientController extends Controller
 
         return response()->noContent();
     }
+
+    public function enough(StoreIngredinetRequest $request) {
+        $nameIngredient = $request->name;
+        $ingredient = Ingredient::where('name', $$nameIngredient)->first();
+        if ($ingredient->quantity >= $request->quantity) {
+            return true;
+        } else {
+            if ($this->buyIngredients($nameIngredient)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function take(UpdateIngredinetRequest $request)
+    {
+        $ingredient = Ingredient::where('name', $request->name)->first();
+        $ingredient->quantity -= $request->quantity;
+        $ingredient->save();
+
+        return new IngredientResource($ingredient);
+    }
+
+    public function buyIngredients($nameIngredient)
+    {
+        $response = Http::post(ENV('URL_BUY'), [
+            'name' => $nameIngredient
+        ]);
+
+        if ($response->successful()) {
+            $this->refreshIngredient($nameIngredient);
+            return true;
+        }
+
+        return false;
+    }
+
+    public function refreshIngredient($nameIngredient): void
+    {
+        $ingredient = Ingredient::where('name', $request->name)->first();
+        $ingredient->quantity = 5;
+        $ingredient->save();
+    }
 }

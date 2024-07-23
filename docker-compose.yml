@@ -1,0 +1,22 @@
+services:
+  restaurantkitchen:
+    build:
+      context: ./restaurantkitchen
+      dockerfile: Dockerfile
+    ports:
+      - "8002:8000"
+    networks:
+      - restaurant_network
+
+  restaurantmanager:
+    build:
+      context: ./restaurantmanager
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    networks:
+      - restaurant_network
+
+networks:
+  restaurant_network:
+    driver: bridge
