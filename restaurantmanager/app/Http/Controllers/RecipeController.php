@@ -75,7 +75,6 @@ class RecipeController extends Controller
             'name' => $nameIngredient,
             'quantity' => $quantityNeeded
         ]);
-        dd($response);
         if ($response->successful()) {
             $ingredients = $response->json();
             if ($ingredients) {
