@@ -6,6 +6,7 @@ use App\Http\Requests\StoreIngredinetRequest;
 use App\Http\Requests\UpdateIngredinetRequest;
 use App\Http\Resources\IngredientCollection;
 use App\Http\Resources\IngredientResource;
+use Illuminate\Support\Facades\Http;
 use App\Models\Ingredient;
 use Illuminate\Http\Request;
 
@@ -55,7 +56,7 @@ class IngredientController extends Controller
 
     public function enough(StoreIngredinetRequest $request) {
         $nameIngredient = $request->name;
-        $ingredient = Ingredient::where('name', $$nameIngredient)->first();
+        $ingredient = Ingredient::where('name', $nameIngredient)->first();
         if ($ingredient->quantity >= $request->quantity) {
             return true;
         } else {

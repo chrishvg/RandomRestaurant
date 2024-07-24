@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
+            $table->integer('id_recipe');
             $table->string('name', length: 10);
             $table->json('ingredients');
             $table->timestamp('created_at')->useCurrent();

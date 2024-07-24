@@ -22,6 +22,12 @@
                 </div>
             </div>
         @endif
+        <div class="d-flex justify-content-center" style="margin-bottom: 10px">
+            <form action="{{ url('/serve_recipe') }}" method="Post">
+                @csrf
+                <input type="submit" class="btn btn-success" value="serve dish">
+            </form>
+        </div>
         <div class="row">
             <div class="col-sm">
                 <p class="font-weight-bold"><strong>Recipes</strong></p>
@@ -36,13 +42,6 @@
                                             <li>{{ $ingredient }}: {{ $quantity }}</li>
                                         @endforeach
                                     </ul>
-                                </div>
-                                <div>
-                                    <form action="{{ url('/serve_recipe') }}" method="Post">
-                                        @csrf
-                                        <input type="hidden" name="recipeid" value="{{ $recipe->id }}">
-                                        <input type="submit" class="btn btn-success" value="select">
-                                    </form>
                                 </div>
                             </div>
                         </li>

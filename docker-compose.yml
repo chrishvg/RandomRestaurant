@@ -1,5 +1,6 @@
 services:
   restaurantkitchen:
+    container_name: restaurantkitchen
     build:
       context: ./restaurantkitchen
       dockerfile: Dockerfile
@@ -9,6 +10,7 @@ services:
       - restaurant_network
 
   restaurantmanager:
+    container_name: restaurantmanager 
     build:
       context: ./restaurantmanager
       dockerfile: Dockerfile

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use App\Models\Recipe;
 use App\Models\History;
@@ -24,7 +25,8 @@ class RecipeController extends Controller
 
     public function serve_recipe(Request $request)
     {
-        $recipe = Recipe::find($request->recipeid);
+        $recipeSelected = $this->selectRecipe();
+        $recipe = Recipe::find($recipeSelected);
         $enoughIngredients = true;
         $ingredients = json_decode($recipe->ingredients);
         foreach($ingredients as $ingredient => $quantity) {
@@ -41,11 +43,30 @@ class RecipeController extends Controller
             return redirect()->back()->with('error','Without ingredients');
         }
         $history = new History();
+        $history->id_recipe = $recipe->id;
         $history->name = $recipe->name;
         $history->ingredients = $recipe->ingredients;
         $history->save();
 
         return redirect()->back()->with('message','Served correctly');
+    }
+
+    public function selectRecipe()
+    {
+        $recipeCounts = DB::table('histories')
+        ->select('id_recipe', DB::raw('count(*) as count'))
+        ->groupBy('id_recipe')
+        ->orderBy('count')
+        ->get();
+
+        if ($recipeCounts->count() > 0) {
+            $minCount = $recipeCounts->first()->count;
+            $recipesWithMinCount = $recipeCounts->where('count', $minCount)->pluck('id_recipe');
+            $idRecipe = $recipesWithMinCount->first();
+            return $idRecipe;
+        }
+
+        return rand(1, 6);
     }
 
     public function enoughIngredient($nameIngredient, $quantityNeeded)
@@ -54,7 +75,7 @@ class RecipeController extends Controller
             'name' => $nameIngredient,
             'quantity' => $quantityNeeded
         ]);
-
+        dd($response);
         if ($response->successful()) {
             $ingredients = $response->json();
             if ($ingredients) {
