@@ -11,7 +11,6 @@ class RecipeController extends Controller
 {
     public function index()
     {
-        //History::truncate();
         $ingredients = [];
         $response = Http::get(ENV('URL_KITCHEN') . '/api/ingredients');
         if ($response->successful()) {
@@ -39,14 +38,14 @@ class RecipeController extends Controller
                 $this->takeIngredient($ingredient, $quantity);
             }
         } else {
-
+            return redirect()->back()->with('error','Without ingredients');
         }
         $history = new History();
         $history->name = $recipe->name;
         $history->ingredients = $recipe->ingredients;
         $history->save();
 
-        return redirect()->back();
+        return redirect()->back()->with('message','Served correctly');
     }
 
     public function enoughIngredient($nameIngredient, $quantityNeeded)
