@@ -25,7 +25,7 @@
         <div class="d-flex justify-content-center" style="margin-bottom: 10px">
             <form action="{{ url('/serve_recipe') }}" method="Post">
                 @csrf
-                <input type="submit" class="btn btn-success" value="serve dish">
+                <input type="submit" class="btn btn-success" value="Serve Dish">
             </form>
         </div>
         <div class="row">
@@ -70,6 +70,23 @@
                                             <li>{{ $ingredient }}: {{ $quantity }}</li>
                                         @endforeach
                                     </ul>
+                                </div>
+                            </div>
+                        </li>
+                    @empty
+                        <li class="list-group-item">No records</li>
+                    @endforelse
+                </ul>
+            </div>
+            <div class="col-sm">
+                <p class="font-weight-bold"><strong>Purchase History</strong></p>
+                <ul class="list-group">
+                    @forelse($purchases as $purchase)
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                <div>Time: {{ date("h:i A", strtotime($purchase['created_at'])) }}</div>
+                                    {{ $purchase['name'] }} = {{ $purchase['quantity'] }}
                                 </div>
                             </div>
                         </li>

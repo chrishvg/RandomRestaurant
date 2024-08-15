@@ -19,6 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('ingredients/purchasehistory', [IngredientController::class, 'getPurchaseHistory']);
 Route::apiResource('ingredients', IngredientController::class);
 
 Route::post('ingredients/take', [IngredientController::class, 'take']);

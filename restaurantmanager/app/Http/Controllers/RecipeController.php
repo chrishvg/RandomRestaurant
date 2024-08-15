@@ -12,15 +12,11 @@ class RecipeController extends Controller
 {
     public function index()
     {
-        $ingredients = [];
-        $response = Http::get(ENV('URL_KITCHEN') . '/api/ingredients');
-        if ($response->successful()) {
-            $ingredients = $response->json()['data'];
-        }
-
+        $ingredients = $this->getKitchenRequest('/api/ingredients');
+        $purchases = $this->getKitchenRequest('/api/ingredients/purchasehistory');
         $recipes = Recipe::all();
         $histories = History::orderBy('created_at', 'desc')->get();
-        return view('welcome', compact('recipes','histories', 'ingredients'));
+        return view('welcome', compact('recipes','histories', 'ingredients', 'purchases'));
     }
 
     public function serve_recipe(Request $request)
@@ -53,20 +49,8 @@ class RecipeController extends Controller
 
     public function selectRecipe()
     {
-        $recipeCounts = DB::table('histories')
-        ->select('id_recipe', DB::raw('count(*) as count'))
-        ->groupBy('id_recipe')
-        ->orderBy('count')
-        ->get();
-
-        if ($recipeCounts->count() > 0) {
-            $minCount = $recipeCounts->first()->count;
-            $recipesWithMinCount = $recipeCounts->where('count', $minCount)->pluck('id_recipe');
-            $idRecipe = $recipesWithMinCount->first();
-            return $idRecipe;
-        }
-
-        return rand(1, 6);
+        $random_number = rand(100, 699);
+        return  substr($random_number, 0, 1);
     }
 
     public function enoughIngredient($nameIngredient, $quantityNeeded)
@@ -91,5 +75,14 @@ class RecipeController extends Controller
             'name' => $nameIngredient,
             'quantity' => $quantityNeeded
         ]);
+    }
+
+    private function getKitchenRequest($path) {
+        $response = Http::get(ENV('URL_KITCHEN') . $path);
+        if ($response->successful()) {
+            return $response->json()['data'];
+        }
+
+        return [];
     }
 }
